@@ -26,10 +26,16 @@ export default function Home() {
   };
 
   const loadData = async () => {
-    const res = await fetch("http://localhost:5000/api/mahasiswa");
-    const json = await res.json();
-    setData(json);
-    setSortedData(json);
+    try {
+      const res = await fetch("http://localhost:5000/api/mahasiswa");
+      if (!res.ok) throw new Error("Gagal load data");
+      const json = await res.json();
+      setData(json);
+      setSortedData(json);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal load data mahasiswa");
+    }
   };
 
   useEffect(() => {
@@ -38,14 +44,22 @@ export default function Home() {
 
   const handleAdd = async () => {
     if (!nim || !nama || !prodi) return alert("Semua field wajib diisi!");
-    const res = await fetch("http://localhost:5000/api/mahasiswa", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nim, nama, prodi }),
-    });
-    if (!res.ok) return alert("NIM sudah terdaftar!");
-    setNim(""); setNama(""); setProdi("");
-    loadData();
+    try {
+      const res = await fetch("http://localhost:5000/api/mahasiswa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nim: nim.toString(), nama, prodi }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return alert(err.message || "Gagal menambahkan data");
+      }
+      setNim(""); setNama(""); setProdi("");
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menambahkan data");
+    }
   };
 
   const startEdit = (mhs) => {
@@ -58,33 +72,53 @@ export default function Home() {
   };
 
   const handleEditSave = async () => {
-    await fetch(`http://localhost:5000/api/mahasiswa/${editNIM}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nim, nama, prodi }),
-    });
-    setEditMode(false);
-    setNim(""); setNama(""); setProdi("");
-    loadData();
+    try {
+      const res = await fetch(`http://localhost:5000/api/mahasiswa/${editNIM}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nim: nim.toString(), nama, prodi }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        return alert(err.message || "Gagal update data");
+      }
+      setEditMode(false);
+      setNim(""); setNama(""); setProdi("");
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal update data");
+    }
   };
 
   const handleDelete = async (nim) => {
     if (!window.confirm("Hapus data ini?")) return;
-    await fetch(`http://localhost:5000/api/mahasiswa/${nim}`, { method: "DELETE" });
-    loadData();
+    try {
+      await fetch(`http://localhost:5000/api/mahasiswa/${nim}`, { method: "DELETE" });
+      loadData();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data");
+    }
   };
 
   const handleSearch = async () => {
-    const res = await fetch(`http://localhost:5000/api/mahasiswa/search/${searchNIM}`);
-    const json = await res.json();
-    setSearchResult(json);
+    try {
+      const res = await fetch(`http://localhost:5000/api/mahasiswa/search/${searchNIM}`);
+      if (!res.ok) throw new Error("Gagal mencari data");
+      const json = await res.json();
+      setSearchResult(json);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mencari data mahasiswa");
+    }
   };
 
   // =================== SORT ===================
   const sortNamaAsc = () => setSortedData([...data].sort((a, b) => a.nama.localeCompare(b.nama)));
   const sortNamaDesc = () => setSortedData([...data].sort((a, b) => b.nama.localeCompare(a.nama)));
-  const sortNimAsc = () => setSortedData([...data].sort((a, b) => a.nim - b.nim));
-  const sortNimDesc = () => setSortedData([...data].sort((a, b) => b.nim - a.nim));
+  const sortNimAsc = () => setSortedData([...data].sort((a, b) => Number(a.nim) - Number(b.nim)));
+  const sortNimDesc = () => setSortedData([...data].sort((a, b) => Number(b.nim) - Number(a.nim)));
 
   // =================== EXPORT CSV ===================
   const exportCSV = (dataToExport) => {

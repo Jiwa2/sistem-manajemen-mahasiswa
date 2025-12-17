@@ -70,9 +70,10 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   try {
     const { nim, nama, prodi } = req.body;
+    console.log("POST diterima:", req.body);
 
     // Validasi input
-    const nimRegex = /^\d{6}$/;
+    const nimRegex = /^\d+$/; 
     const namaRegex = /^[a-zA-Z\s]+$/;
 
     if (!nim || !nama || !prodi) {
