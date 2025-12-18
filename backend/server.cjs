@@ -6,11 +6,8 @@ const path = require("path");
 const app = express();
 
 // ===== CORS =====
-// Izinkan semua origin sementara untuk testing
-app.use(cors({
-  origin: "*", // izinkan dari semua domain
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}));
+app.use(cors({ origin: "*" }));
+app.options("*", cors({ origin: "*" }));
 
 app.use(express.json());
 
@@ -18,23 +15,12 @@ app.use(express.json());
 const file = path.join(__dirname, "./data/mahasiswa.json");
 
 function loadData() {
-  try {
-    if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
-    const raw = fs.readFileSync(file);
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error("Error membaca file:", err);
-    return [];
-  }
+  if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
+  return JSON.parse(fs.readFileSync(file));
 }
 
 function saveData(data) {
-  try {
-    fs.writeFileSync(file, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error("Error menyimpan file:", err);
-    throw new Error("Gagal menyimpan data");
-  }
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
 // ===== ROUTES =====
