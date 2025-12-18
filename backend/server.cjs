@@ -6,9 +6,11 @@ const path = require("path");
 const app = express();
 
 // ===== CORS =====
+// Izinkan semua origin (frontend bebas akses)
 app.use(cors({ origin: "*" }));
 app.options("*", cors({ origin: "*" }));
 
+// Parse JSON body
 app.use(express.json());
 
 // ===== FILE DATA =====
@@ -24,13 +26,21 @@ function saveData(data) {
 }
 
 // ===== ROUTES =====
-app.get("/api/mahasiswa", (req, res) => res.json(loadData()));
+
+// GET semua data mahasiswa
+app.get("/api/mahasiswa", (req, res) => {
+  res.json(loadData());
+});
+
+// POST tambah data mahasiswa
 app.post("/api/mahasiswa", (req, res) => {
   const { nim, nama, prodi } = req.body;
-  if (!nim || !nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
+  if (!nim || !nama || !prodi)
+    return res.status(400).json({ message: "Data tidak lengkap" });
 
   const data = loadData();
-  if (data.find(m => m.nim === String(nim))) return res.status(400).json({ message: "NIM sudah terdaftar" });
+  if (data.find(m => m.nim === String(nim)))
+    return res.status(400).json({ message: "NIM sudah terdaftar" });
 
   const mhs = { nim: String(nim), nama, prodi };
   data.push(mhs);
@@ -38,9 +48,11 @@ app.post("/api/mahasiswa", (req, res) => {
   res.json({ message: "Data ditambahkan", data: mhs });
 });
 
+// PUT update data mahasiswa
 app.put("/api/mahasiswa/:nim", (req, res) => {
   const nim = String(req.params.nim);
   const { nama, prodi } = req.body;
+
   const data = loadData();
   const index = data.findIndex(m => m.nim === nim);
   if (index === -1) return res.status(404).json({ message: "Data tidak ditemukan" });
@@ -48,19 +60,23 @@ app.put("/api/mahasiswa/:nim", (req, res) => {
   data[index].nama = nama;
   data[index].prodi = prodi;
   saveData(data);
+
   res.json({ message: "Data berhasil diupdate", data: data[index] });
 });
 
+// DELETE hapus data mahasiswa
 app.delete("/api/mahasiswa/:nim", (req, res) => {
   const nim = String(req.params.nim);
   const data = loadData();
   const newList = data.filter(m => m.nim !== nim);
-  if (newList.length === data.length) return res.status(404).json({ message: "Data tidak ditemukan" });
+  if (newList.length === data.length)
+    return res.status(404).json({ message: "Data tidak ditemukan" });
 
   saveData(newList);
   res.json({ message: "Data berhasil dihapus" });
 });
 
+// SEARCH mahasiswa by NIM
 app.get("/api/mahasiswa/search/:nim", (req, res) => {
   const nim = String(req.params.nim);
   const data = loadData();
