@@ -3,7 +3,9 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 
-const file = path.join(__dirname, "./data/mahasiswa.json");
+// ======================= PATH FILE =========================
+// Naik 1 level dari folder routes ke root, baru masuk folder data
+const file = path.join(__dirname, "../data/mahasiswa.json");
 
 // ======================= CLASS MAHASISWA =========================
 class Mahasiswa {
@@ -72,7 +74,6 @@ router.post("/", (req, res) => {
     const { nim, nama, prodi } = req.body;
     console.log("POST diterima:", req.body);
 
-    // Validasi input
     const nimRegex = /^\d+$/; 
     const namaRegex = /^[a-zA-Z\s]+$/;
 
@@ -80,7 +81,7 @@ router.post("/", (req, res) => {
       return res.status(400).json({ message: "Data tidak lengkap" });
     }
     if (!nimRegex.test(nim)) {
-      return res.status(400).json({ message: "Format NIM salah (6 digit)" });
+      return res.status(400).json({ message: "Format NIM salah" });
     }
     if (!namaRegex.test(nama)) {
       return res.status(400).json({ message: "Nama hanya boleh huruf" });
@@ -129,17 +130,18 @@ router.put("/:nim", (req, res) => {
     const nim = String(req.params.nim);
     const { nama, prodi } = req.body;
 
+    if (!nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
+
+    const namaRegex = /^[a-zA-Z\s]+$/;
+    if (!namaRegex.test(nama)) {
+      return res.status(400).json({ message: "Nama hanya boleh huruf" });
+    }
+
     const data = loadData();
     const index = data.findIndex(m => m.nim === nim);
 
     if (index === -1) {
       return res.status(404).json({ message: "Data tidak ditemukan" });
-    }
-
-    // Validasi input
-    const namaRegex = /^[a-zA-Z\s]+$/;
-    if (!namaRegex.test(nama)) {
-      return res.status(400).json({ message: "Nama hanya boleh huruf" });
     }
 
     const mhs = new Mahasiswa(nim, nama, prodi);
@@ -153,7 +155,7 @@ router.put("/:nim", (req, res) => {
   }
 });
 
-// SEARCH by NIM (Linear Search)
+// SEARCH by NIM
 router.get("/search/:nim", (req, res) => {
   try {
     const nim = String(req.params.nim);
