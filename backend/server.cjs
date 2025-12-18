@@ -7,10 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// File data
 const file = path.join(__dirname, "./data/mahasiswa.json");
 
-// ======================= UTILITY =========================
 function loadData() {
   try {
     if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
@@ -31,9 +29,6 @@ function saveData(data) {
   }
 }
 
-// ======================= ROUTES =========================
-
-// GET semua mahasiswa
 app.get("/api/mahasiswa", (req, res) => {
   const data = loadData();
   res.json(data);
@@ -85,7 +80,6 @@ app.put("/api/mahasiswa/:nim", (req, res) => {
   res.json({ message: "Data berhasil diupdate", data: data[index] });
 });
 
-// DELETE mahasiswa
 app.delete("/api/mahasiswa/:nim", (req, res) => {
   const nim = String(req.params.nim);
   let data = loadData();
@@ -97,7 +91,6 @@ app.delete("/api/mahasiswa/:nim", (req, res) => {
   res.json({ message: "Data berhasil dihapus" });
 });
 
-// SEARCH mahasiswa
 app.get("/api/mahasiswa/search/:nim", (req, res) => {
   const nim = String(req.params.nim);
   const data = loadData();
