@@ -5,16 +5,15 @@ const path = require("path");
 
 const app = express();
 
-// ===== CORS (FIX VERCEL) =====
+// ✅ FIX CORS (NODE 22 SAFE)
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
-app.options("*", cors());
 
-// ===== BODY PARSER =====
 app.use(express.json());
+
 
 // ===== PATH DATA =====
 const file = path.join(__dirname, "data", "mahasiswa.json");
