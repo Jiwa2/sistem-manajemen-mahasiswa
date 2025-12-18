@@ -4,9 +4,17 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
-app.use(cors());
+
+// ===== CORS =====
+// Izinkan frontend Vercel kamu
+app.use(cors({
+  origin: "https://sistem-manajemen-mahasiswa.vercel.app", // ganti kalau beda
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+}));
+
 app.use(express.json());
 
+// ===== FILE DATA =====
 const file = path.join(__dirname, "./data/mahasiswa.json");
 
 function loadData() {
@@ -29,23 +37,24 @@ function saveData(data) {
   }
 }
 
+// ===== ROUTES =====
+
+// GET semua data
 app.get("/api/mahasiswa", (req, res) => {
   const data = loadData();
   res.json(data);
 });
 
-
+// POST tambah data
 app.post("/api/mahasiswa", (req, res) => {
   const { nim, nama, prodi } = req.body;
-
-  console.log("POST Body:", req.body); 
 
   if (!nim || !nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
 
   const nimRegex = /^\d+$/;
   const namaRegex = /^[a-zA-Z\s]+$/;
 
-  if (!nimRegex.test(nim)) return res.status(400).json({ message: "Format NIM salah (6 digit)" });
+  if (!nimRegex.test(nim)) return res.status(400).json({ message: "Format NIM salah (hanya angka)" });
   if (!namaRegex.test(nama)) return res.status(400).json({ message: "Nama hanya boleh huruf" });
 
   const data = loadData();
@@ -58,11 +67,10 @@ app.post("/api/mahasiswa", (req, res) => {
   res.json({ message: "Data ditambahkan", data: mhs });
 });
 
+// PUT update data
 app.put("/api/mahasiswa/:nim", (req, res) => {
   const nimParam = String(req.params.nim);
   const { nama, prodi } = req.body;
-
-  console.log("PUT Body:", req.body);
 
   if (!nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
 
@@ -80,9 +88,10 @@ app.put("/api/mahasiswa/:nim", (req, res) => {
   res.json({ message: "Data berhasil diupdate", data: data[index] });
 });
 
+// DELETE berdasarkan NIM
 app.delete("/api/mahasiswa/:nim", (req, res) => {
   const nim = String(req.params.nim);
-  let data = loadData();
+  const data = loadData();
 
   const newList = data.filter(m => m.nim !== nim);
   if (newList.length === data.length) return res.status(404).json({ message: "Data tidak ditemukan" });
@@ -91,6 +100,7 @@ app.delete("/api/mahasiswa/:nim", (req, res) => {
   res.json({ message: "Data berhasil dihapus" });
 });
 
+// SEARCH by NIM
 app.get("/api/mahasiswa/search/:nim", (req, res) => {
   const nim = String(req.params.nim);
   const data = loadData();
@@ -98,7 +108,6 @@ app.get("/api/mahasiswa/search/:nim", (req, res) => {
   res.json(result);
 });
 
-// const PORT = 5000;
+// ===== START SERVER =====
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server running on port " + PORT));
-
