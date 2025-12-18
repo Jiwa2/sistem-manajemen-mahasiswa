@@ -25,7 +25,10 @@ export default function Home() {
   };
 
   // Ganti dengan URL Railway kamu
-  const API_URL = "https://namaproject-production.up.railway.app";
+const API_URL = "https://sistem-manajemen-mahasiswa-production.up.railway.app";
+
+fetch(`${API_URL}/api/mahasiswa`)
+
 
   const loadData = async () => {
     try {
