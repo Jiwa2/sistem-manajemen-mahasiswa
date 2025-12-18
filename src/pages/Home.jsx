@@ -25,16 +25,19 @@ export default function Home() {
     setOpen(false);
   };
 
-  const loadData = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/mahasiswa");
-      const json = await res.json();
-      setData(json);
-      setSortedData(json);
-    } catch {
-      alert("Gagal load data");
-    }
-  };
+const API_URL = "https://namaproject-production.up.railway.app";
+
+const loadData = async () => {
+  try {
+    const res = await fetch(`${API_URL}/api/mahasiswa`);
+    const json = await res.json();
+    setData(json);
+    setSortedData(json);
+  } catch {
+    alert("Gagal load data");
+  }
+};
+
 
   useEffect(() => {
     loadData();
