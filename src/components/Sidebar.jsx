@@ -20,10 +20,6 @@ export default function Sidebar({ open, onSelect }) {
       </h3>
       <ul>
         <li onClick={() => onSelect("Home")}>Home</li>
-        <li onClick={() => onSelect("input")}>Input Data</li>
-        <li onClick={() => onSelect("view")}>Lihat Data</li>
-        <li onClick={() => onSelect("search")}>Cari Data</li>
-        <li onClick={() => onSelect("sort")}>Pengurutan Data</li>
       </ul>
       <div style={{ marginTop: "auto" }}>
         <button
