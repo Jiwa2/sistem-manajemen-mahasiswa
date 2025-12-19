@@ -44,12 +44,8 @@ export default function Home() {
     setOpen(false);
   };
 
-
   // Ganti dengan URL Railway kamu
-const API_URL = "https://sistem-manajemen-mahasiswa-production.up.railway.app";
-
-fetch(`${API_URL}/api/mahasiswa`)
-
+  const API_URL = "https://sistem-manajemen-mahasiswa-production.up.railway.app";
 
   const loadData = async () => {
     try {
@@ -139,25 +135,46 @@ fetch(`${API_URL}/api/mahasiswa`)
   const sortNimDesc = () =>
     setSortedData([...data].sort((a, b) => Number(b.nim) - Number(a.nim)));
 
+  // ===== EXPORT CSV =====
+  const exportCSV = (useSorted = true) => {
+    const headers = ["NIM", "Nama", "Prodi"];
+    const rows = (useSorted ? sortedData : data).map(item => [item.nim, item.nama, item.prodi]);
+
+    let csvContent = "";
+    csvContent += headers.join(",") + "\n";
+    rows.forEach(row => {
+      csvContent += row.join(",") + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", useSorted ? "mahasiswa_sorted.csv" : "mahasiswa_all.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <Navbar onToggle={toggle} />
       <Sidebar open={open} onSelect={handleSelect} />
 
-<main style={{ padding: 24, background: "#f1f5f9", minHeight: "100vh", position: "relative" }}>
+      <main style={{ padding: 24, background: "#f1f5f9", minHeight: "100vh", position: "relative" }}>
 
-  {/* 🌸 BACKGROUND BUNGA */}
-  <div className="flower-bg">
-    <span className="flower">🌸</span>
-    <span className="flower">🌼</span>
-    <span className="flower">🌸</span>
-    <span className="flower">🌼</span>
-    <span className="flower">🌸</span>
-    <span className="flower">🌼</span>
-    <span className="flower">🌺</span>
-    <span className="flower">🌸</span>
-    <span className="flower">🌼</span>
-  </div>
+        {/* 🌸 BACKGROUND BUNGA */}
+        <div className="flower-bg">
+          <span className="flower">🌸</span>
+          <span className="flower">🌼</span>
+          <span className="flower">🌸</span>
+          <span className="flower">🌼</span>
+          <span className="flower">🌸</span>
+          <span className="flower">🌼</span>
+          <span className="flower">🌺</span>
+          <span className="flower">🌸</span>
+          <span className="flower">🌼</span>
+        </div>
 
         {/* HOME */}
         {page === "Home" && (
@@ -182,49 +199,42 @@ fetch(`${API_URL}/api/mahasiswa`)
 
         {/* INPUT DATA */}
         {page === "input" && (
-<div style={centerWrapper}>
-  <div style={card}>
-    <h2>{editMode ? "Edit Data Mahasiswa" : "Input Data Mahasiswa"}</h2>
+          <div style={centerWrapper}>
+            <div style={card}>
+              <h2>{editMode ? "Edit Data Mahasiswa" : "Input Data Mahasiswa"}</h2>
 
-    {/* NIM hanya angka */}
-    <input
-      style={input}
-      placeholder="NIM"
-      value={nim}
-      onChange={e => setNim(e.target.value)}
-      onKeyPress={e => {
-        if (!/[0-9]/.test(e.key)) e.preventDefault();
-      }}
-    />
+              {/* NIM hanya angka */}
+              <input
+                style={input}
+                placeholder="NIM"
+                value={nim}
+                onChange={e => setNim(e.target.value)}
+                onKeyPress={e => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+              />
 
-    {/* Nama hanya huruf */}
-    <input
-      style={input}
-      placeholder="Nama"
-      value={nama}
-      onChange={e => setNama(e.target.value)}
-      onKeyPress={e => {
-        if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault();
-      }}
-    />
+              {/* Nama hanya huruf */}
+              <input
+                style={input}
+                placeholder="Nama"
+                value={nama}
+                onChange={e => setNama(e.target.value)}
+                onKeyPress={e => { if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault(); }}
+              />
 
-    {/* Prodi hanya huruf */}
-    <input
-      style={input}
-      placeholder="Program Studi"
-      value={prodi}
-      onChange={e => setProdi(e.target.value)}
-      onKeyPress={e => {
-        if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault();
-      }}
-    />
+              {/* Prodi hanya huruf */}
+              <input
+                style={input}
+                placeholder="Program Studi"
+                value={prodi}
+                onChange={e => setProdi(e.target.value)}
+                onKeyPress={e => { if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault(); }}
+              />
 
-    <button style={btnPrimary} onClick={editMode ? handleEditSave : handleAdd}>
-      {editMode ? "Simpan Perubahan" : "Simpan Data"}
-    </button>
-  </div>
-</div>
-
+              <button style={btnPrimary} onClick={editMode ? handleEditSave : handleAdd}>
+                {editMode ? "Simpan Perubahan" : "Simpan Data"}
+              </button>
+            </div>
+          </div>
         )}
 
         {/* LIHAT DATA */}
@@ -232,6 +242,12 @@ fetch(`${API_URL}/api/mahasiswa`)
           <div style={centerWrapper}>
             <div style={card}>
               <h2>Data Mahasiswa</h2>
+
+              {/* Tombol Export CSV */}
+              <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+                <button style={btnPrimary} onClick={() => exportCSV(false)}>Export CSV</button>
+              </div>
+
               <table style={table}>
                 <thead>
                   <tr>
@@ -296,8 +312,9 @@ fetch(`${API_URL}/api/mahasiswa`)
               <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
                 <button style={btnPrimary} onClick={sortNamaAsc}>Ascending (A - Z)</button>
                 <button style={btnInfo} onClick={sortNamaDesc}>Descending (Z–A)</button>
-                <button style={btnPrimary} onClick={sortNimAsc}>Ascending (NIM)</button>
-                <button style={btnInfo} onClick={sortNimDesc}>Descending (NIM)</button>
+                <button style={btnPrimary} onClick={sortNimAsc}>NIM ⬆️</button>
+                <button style={btnInfo} onClick={sortNimDesc}>NIM ⬇️</button>
+                <button style={btnPrimary} onClick={() => exportCSV(true)}>Export CSV</button>
               </div>
               <table style={table}>
                 <thead>
@@ -325,12 +342,10 @@ fetch(`${API_URL}/api/mahasiswa`)
           <div style={centerWrapper}>
             <div style={card}>
               <h2>Keluar Aplikasi</h2>
-
               <p style={{ marginTop: 12, fontSize: 16, color: "#374151" }}>
                 Kamu telah selesai menggunakan
                 <b> Sistem Manajemen Data Mahasiswa</b>.
               </p>
-
               <div
                 style={{
                   marginTop: 24,
