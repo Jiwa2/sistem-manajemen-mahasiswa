@@ -1,12 +1,15 @@
+/* ===== ROOT & RESET ===== */
 #root {
   width: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
   text-align: left;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fdf6ff, #fff0f6);
 }
 
-
+/* ===== LOGO ===== */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -21,12 +24,8 @@
 }
 
 @keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -35,16 +34,96 @@
   }
 }
 
+/* ===== CARD ===== */
 .card {
+  background: #ffffff;
   padding: 2em;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.read-the-docs {
-  color: #888;
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
 }
 
+/* ===== BUTTON STYLING ===== */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-weight: 600;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
 
-/* ===== FLOWER BACKGROUND (SMOOTH FLOW) ===== */
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.btnPrimary { background: #ab3189ff; color: #fff; }
+.btnInfo { background: #1e40af; color: #fff; margin-right: 6px; }
+.btnDanger { background: #ef4444; color: #fff; }
+.btnSearch { background: #ab3189ff; color: #fff; padding: 0 26px; height: 48px; }
+
+/* ===== INPUT ===== */
+input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1.5px solid #ccc;
+  font-size: 15px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #ab3189ff;
+  box-shadow: 0 0 8px rgba(171, 49, 137, 0.25);
+}
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th {
+  background: #ab3189ff;
+  color: #fff;
+  padding: 14px;
+  text-align: left;
+  border-radius: 6px 6px 0 0;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* ===== HOME CARD & BOX ===== */
+.homeCard {
+  background: #fff0f6;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 1000px;
+  margin: 60px auto;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border-left: 6px solid #ab3189ff;
+}
+
+.homeBox {
+  background: #ffe6f0;
+  padding: 22px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border: 1px solid #ffb6d9;
+}
+
+/* ===== FLOWER BACKGROUND (SMOOTH FALL) ===== */
 .flower-bg {
   position: fixed;
   inset: 0;
@@ -62,7 +141,6 @@
   animation-iteration-count: infinite;
 }
 
-/* POSISI + KECEPATAN + DELAY BEDA */
 .flower:nth-child(1) { left: 10%; animation-duration: 5s; animation-delay: 0s; }
 .flower:nth-child(2) { left: 30%; animation-duration: 5s; animation-delay: -4s; }
 .flower:nth-child(3) { left: 50%; animation-duration: 5s; animation-delay: -8s; }
@@ -71,11 +149,9 @@
 .flower:nth-child(6) { left: 90%; animation-duration: 5s; animation-delay: -13s; }
 
 @keyframes fall {
-  from {
-    transform: translateY(-20vh);
-  }
-  to {
-    transform: translateY(130vh);
-  }
+  from { transform: translateY(-20vh); }
+  to { transform: translateY(130vh); }
 }
 
+/* ===== MISC ===== */
+.read-the-docs { color: #888; }
