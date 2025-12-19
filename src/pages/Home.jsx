@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // 🔑 tambahkan ini
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 export default function Home() {
-  const navigate = useNavigate(); // 🔑 tambahkan ini
+  const navigate = useNavigate(); 
 
   // 🔒 LOGIN PROTECTION
   useEffect(() => {
     if (!localStorage.getItem("login")) {
-      navigate("/"); // kalau belum login, balik ke login page
+      navigate("/"); 
     }
   }, [navigate]);
 
@@ -182,17 +182,49 @@ fetch(`${API_URL}/api/mahasiswa`)
 
         {/* INPUT DATA */}
         {page === "input" && (
-          <div style={centerWrapper}>
-            <div style={card}>
-              <h2>{editMode ? "Edit Data Mahasiswa" : "Input Data Mahasiswa"}</h2>
-              <input style={input} placeholder="NIM" value={nim} onChange={e => setNim(e.target.value)} />
-              <input style={input} placeholder="Nama" value={nama} onChange={e => setNama(e.target.value)} />
-              <input style={input} placeholder="Program Studi" value={prodi} onChange={e => setProdi(e.target.value)} />
-              <button style={btnPrimary} onClick={editMode ? handleEditSave : handleAdd}>
-                {editMode ? "Simpan Perubahan" : "Simpan Data"}
-              </button>
-            </div>
-          </div>
+<div style={centerWrapper}>
+  <div style={card}>
+    <h2>{editMode ? "Edit Data Mahasiswa" : "Input Data Mahasiswa"}</h2>
+
+    {/* NIM hanya angka */}
+    <input
+      style={input}
+      placeholder="NIM"
+      value={nim}
+      onChange={e => setNim(e.target.value)}
+      onKeyPress={e => {
+        if (!/[0-9]/.test(e.key)) e.preventDefault();
+      }}
+    />
+
+    {/* Nama hanya huruf */}
+    <input
+      style={input}
+      placeholder="Nama"
+      value={nama}
+      onChange={e => setNama(e.target.value)}
+      onKeyPress={e => {
+        if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault();
+      }}
+    />
+
+    {/* Prodi hanya huruf */}
+    <input
+      style={input}
+      placeholder="Program Studi"
+      value={prodi}
+      onChange={e => setProdi(e.target.value)}
+      onKeyPress={e => {
+        if (!/[a-zA-Z\s]/.test(e.key)) e.preventDefault();
+      }}
+    />
+
+    <button style={btnPrimary} onClick={editMode ? handleEditSave : handleAdd}>
+      {editMode ? "Simpan Perubahan" : "Simpan Data"}
+    </button>
+  </div>
+</div>
+
         )}
 
         {/* LIHAT DATA */}

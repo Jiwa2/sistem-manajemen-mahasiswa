@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 
 // ======================= PATH FILE =========================
-// Naik 1 level dari folder routes ke root, baru masuk folder data
 const file = path.join(__dirname, "../data/mahasiswa.json");
 
 // ======================= CLASS MAHASISWA =========================
@@ -12,16 +11,19 @@ class Mahasiswa {
   #nim;
   #nama;
   #prodi;
+  #createdAt;
 
-  constructor(nim, nama, prodi) {
+  constructor(nim, nama, prodi, createdAt) {
     this.#nim = String(nim);
     this.#nama = nama;
     this.#prodi = prodi;
+    this.#createdAt = createdAt || new Date().toISOString();
   }
 
   getNim() { return this.#nim; }
   getNama() { return this.#nama; }
   getProdi() { return this.#prodi; }
+  getCreatedAt() { return this.#createdAt; }
 
   setNama(nama) { this.#nama = nama; }
   setProdi(prodi) { this.#prodi = prodi; }
@@ -30,7 +32,8 @@ class Mahasiswa {
     return {
       nim: this.#nim,
       nama: this.#nama,
-      prodi: this.#prodi
+      prodi: this.#prodi,
+      createdAt: this.#createdAt
     };
   }
 }
@@ -72,19 +75,9 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
   try {
     const { nim, nama, prodi } = req.body;
-    console.log("POST diterima:", req.body);
-
-    const nimRegex = /^\d+$/; 
-    const namaRegex = /^[a-zA-Z\s]+$/;
 
     if (!nim || !nama || !prodi) {
       return res.status(400).json({ message: "Data tidak lengkap" });
-    }
-    if (!nimRegex.test(nim)) {
-      return res.status(400).json({ message: "Format NIM salah" });
-    }
-    if (!namaRegex.test(nama)) {
-      return res.status(400).json({ message: "Nama hanya boleh huruf" });
     }
 
     const data = loadData();
@@ -97,10 +90,36 @@ router.post("/", (req, res) => {
     saveData(data);
 
     res.json({ message: "Data ditambahkan", data: mhs.toJSON() });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Gagal menambahkan data" });
+  }
+});
+
+// PUT update data
+router.put("/:nim", (req, res) => {
+  try {
+    const nim = String(req.params.nim);
+    const { nama, prodi } = req.body;
+
+    if (!nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
+
+    const data = loadData();
+    const index = data.findIndex(m => m.nim === nim);
+
+    if (index === -1) {
+      return res.status(404).json({ message: "Data tidak ditemukan" });
+    }
+
+    const oldData = data[index];
+    const mhs = new Mahasiswa(nim, nama, prodi, oldData.createdAt);
+    data[index] = mhs.toJSON();
+    saveData(data);
+
+    res.json({ message: "Data berhasil diupdate", data: mhs.toJSON() });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Gagal mengupdate data" });
   }
 });
 
@@ -121,37 +140,6 @@ router.delete("/:nim", (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Gagal menghapus data" });
-  }
-});
-
-// PUT update data
-router.put("/:nim", (req, res) => {
-  try {
-    const nim = String(req.params.nim);
-    const { nama, prodi } = req.body;
-
-    if (!nama || !prodi) return res.status(400).json({ message: "Data tidak lengkap" });
-
-    const namaRegex = /^[a-zA-Z\s]+$/;
-    if (!namaRegex.test(nama)) {
-      return res.status(400).json({ message: "Nama hanya boleh huruf" });
-    }
-
-    const data = loadData();
-    const index = data.findIndex(m => m.nim === nim);
-
-    if (index === -1) {
-      return res.status(404).json({ message: "Data tidak ditemukan" });
-    }
-
-    const mhs = new Mahasiswa(nim, nama, prodi);
-    data[index] = mhs.toJSON();
-    saveData(data);
-
-    res.json({ message: "Data berhasil diupdate", data: mhs.toJSON() });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Gagal mengupdate data" });
   }
 });
 
