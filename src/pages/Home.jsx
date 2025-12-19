@@ -123,7 +123,19 @@ fetch(`${API_URL}/api/mahasiswa`)
       <Navbar onToggle={toggle} />
       <Sidebar open={open} onSelect={handleSelect} />
 
-      <main style={{ padding: 24, background: "#f1f5f9", minHeight: "100vh" }}>
+<main style={{ padding: 24, background: "#f1f5f9", minHeight: "100vh", position: "relative" }}>
+
+  {/* 🌸 BACKGROUND BUNGA */}
+  <div className="flower-bg">
+    <span className="flower">🌸</span>
+    <span className="flower">🌸</span>
+    <span className="flower">🌼</span>
+    <span className="flower">🌸</span>
+    <span className="flower">🌼</span>
+    <span className="flower">🌺</span>
+    <span className="flower">🌸</span>
+    <span className="flower">🌼</span>
+  </div>
 
         {/* HOME */}
         {page === "Home" && (
