@@ -294,10 +294,10 @@ fetch(`${API_URL}/api/mahasiswa`)
             <div style={card}>
               <h2>Pengurutan Data</h2>
               <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
-                <button style={btnPrimary} onClick={sortNamaAsc}>Nama A–Z</button>
-                <button style={btnInfo} onClick={sortNamaDesc}>Nama Z–A</button>
-                <button style={btnPrimary} onClick={sortNimAsc}>NIM ↑</button>
-                <button style={btnInfo} onClick={sortNimDesc}>NIM ↓</button>
+                <button style={btnPrimary} onClick={sortNamaAsc}>Ascending (A - Z)</button>
+                <button style={btnInfo} onClick={sortNamaDesc}>Descending (Z–A)</button>
+                <button style={btnPrimary} onClick={sortNimAsc}>Ascending (NIM)</button>
+                <button style={btnInfo} onClick={sortNimDesc}>Descending (NIM)</button>
               </div>
               <table style={table}>
                 <thead>
