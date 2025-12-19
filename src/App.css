@@ -1,9 +1,11 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
 }
+
 
 .logo {
   height: 6em;
@@ -41,7 +43,8 @@
   color: #888;
 }
 
-/* ===== FLOWER BACKGROUND ===== */
+
+/* ===== FLOWER BACKGROUND (SMOOTH FLOW) ===== */
 .flower-bg {
   position: fixed;
   inset: 0;
@@ -59,17 +62,19 @@
   animation-iteration-count: infinite;
 }
 
-.flower:nth-child(1) { left: 10%; animation-duration: 14s; }
-.flower:nth-child(2) { left: 30%; animation-duration: 10s; }
-.flower:nth-child(3) { left: 50%; animation-duration: 16s; }
-.flower:nth-child(4) { left: 70%; animation-duration: 12s; }
-.flower:nth-child(5) { left: 90%; animation-duration: 15s; }
+/* POSISI + KECEPATAN + DELAY BEDA */
+.flower:nth-child(1) { left: 10%; animation-duration: 5s; animation-delay: 0s; }
+.flower:nth-child(2) { left: 30%; animation-duration: 5s; animation-delay: -4s; }
+.flower:nth-child(3) { left: 50%; animation-duration: 5s; animation-delay: -8s; }
+.flower:nth-child(4) { left: 70%; animation-duration: 5s; animation-delay: -6s; }
+.flower:nth-child(5) { left: 90%; animation-duration: 5s; animation-delay: -10s; }
 
 @keyframes fall {
   from {
-    transform: translateY(0);
+    transform: translateY(-20vh);
   }
   to {
     transform: translateY(130vh);
   }
 }
+

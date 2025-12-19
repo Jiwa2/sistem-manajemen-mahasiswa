@@ -128,6 +128,7 @@ fetch(`${API_URL}/api/mahasiswa`)
   {/* 🌸 BACKGROUND BUNGA */}
   <div className="flower-bg">
     <span className="flower">🌸</span>
+    <span className="flower">🌼</span>
     <span className="flower">🌸</span>
     <span className="flower">🌼</span>
     <span className="flower">🌸</span>
