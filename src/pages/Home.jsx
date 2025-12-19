@@ -255,6 +255,34 @@ fetch(`${API_URL}/api/mahasiswa`)
           </div>
         )}
 
+        {page === "logout" && (
+          <div style={centerWrapper}>
+            <div style={card}>
+              <h2>Keluar Aplikasi</h2>
+
+              <p style={{ marginTop: 12, fontSize: 16, color: "#374151" }}>
+                Kamu telah selesai menggunakan
+                <b> Sistem Manajemen Data Mahasiswa</b>.
+              </p>
+
+              <div
+                style={{
+                  marginTop: 24,
+                  padding: "20px",
+                  borderRadius: "14px",
+                  background: "#ffffff",
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
+                  borderLeft: "6px solid #ab3189ff",
+                }}
+              >
+                <p style={{ margin: 0, lineHeight: 1.7, color: "#374151" }}>
+                  Terima kasih telah mencoba aplikasi ini !.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </>
   );
